@@ -201,7 +201,13 @@ class XhsJsonStoreImplement(AbstractStore):
         async with self.lock:
             if os.path.exists(save_file_name):
                 async with aiofiles.open(save_file_name, 'r', encoding='utf-8') as file:
-                    save_data = json.loads(await file.read())
+                    data = await file.read()
+                    try:
+                        save_data = json.loads(data)
+                    except:
+                        print("SAVE JSON ERROR!!!!!!")
+                        print(save_data)
+                        return
 
             save_data.append(save_item)
             async with aiofiles.open(save_file_name, 'w', encoding='utf-8') as file:
